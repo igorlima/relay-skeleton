@@ -20,7 +20,16 @@ class Root extends React.Component {
     return (
       <Relay.RootContainer
         Component={ Application }
-        route={ new ExampleRoot() } />
+        route={ new ExampleRoot() }
+        onReadyStateChange={
+          function(readyState) {
+            // https://github.com/ariya/phantomjs/wiki/API-Reference-WebPage#webpage-onCallback
+            if (typeof window.callPhantom === 'function') {
+              window.callPhantom( readyState );
+            }
+            console.log(readyState);
+          }
+        } />
     );
   }
 }
