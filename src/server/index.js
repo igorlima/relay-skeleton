@@ -1,6 +1,7 @@
 import express from 'express';
 import { Schema } from './data/schema';
 import graphQLHTTP from 'express-graphql';
+import phantom from 'phantom';
 
 const app = express();
 
@@ -36,6 +37,27 @@ app.use(function(req, res, next) {
   } else {
     next();
   }
+});
+
+// https://github.com/ariya/phantomjs/wiki/API-Reference-WebPage
+// https://www.npmjs.com/package/phantom
+app.use('/rendering-in-server', function(req, res) {
+
+  phantom.create(function (phantom_process) {
+    phantom_process.createPage(function (page) {
+      // https://github.com/ariya/phantomjs/wiki/API-Reference-WebPage#webpage-onCallback
+      page.set('onCallback', function(data) {
+        data && data.done && page.evaluate(function () {
+          return document.getElementById('container').outerHTML;
+        }, function (result) {
+          res.send( result );
+          phantom_process.exit();
+        });
+      })
+      page.open("http://localhost:3000/");
+    });
+  });
+
 });
 
 app.use('/', graphQLHTTP({ schema: Schema, pretty: true }));
