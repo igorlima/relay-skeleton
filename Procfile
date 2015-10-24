@@ -1,0 +1,1 @@
+web: node build/static-files-server.js
