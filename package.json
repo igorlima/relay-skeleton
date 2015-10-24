@@ -27,6 +27,8 @@
     "html-webpack-plugin": "^1.6.0",
     "nodemon": "^1.4.0",
     "object-assign": "^3.0.0",
+    "phantomjs-polyfill": "0.0.1",
+    "promise-polyfill": "^2.1.0",
     "react-hot-loader": "^1.2.8",
     "sass-loader": "^2.0.0",
     "source-map-support": "^0.3.2",
