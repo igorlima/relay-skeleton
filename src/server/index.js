@@ -43,6 +43,12 @@ app.use(function(req, res, next) {
 // https://www.npmjs.com/package/phantom
 app.use('/rendering-in-server', function(req, res) {
 
+  /**
+   * Running a Headless Browser on Heroku
+   * - https://discussion.heroku.com/t/running-a-headless-browser-on-heroku/97/2
+   * - https://github.com/stomita/heroku-buildpack-phantomjs
+   */
+
   phantom.create(function (phantom_process) {
     phantom_process.createPage(function (page) {
       // https://github.com/ariya/phantomjs/wiki/API-Reference-WebPage#webpage-onCallback
@@ -54,15 +60,15 @@ app.use('/rendering-in-server', function(req, res) {
           phantom_process.exit();
         });
       })
-      page.open("http://localhost:3000/");
+      page.open("https://relay-hacking.herokuapp.com/");
     });
   });
 
 });
 
 app.use('/', graphQLHTTP({ schema: Schema, pretty: true }));
-app.listen(8080, (err) => {
+app.listen( process.env.PORT || 8080, (err) => {
   if (err)
     return console.error(err);
-  console.log('GraphQL Server is now running on localhost:8080');
+  console.log(`GraphQL Server is now running on localhost:${process.env.PORT || 8080}`);
 });
